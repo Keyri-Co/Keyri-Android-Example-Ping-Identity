@@ -1,0 +1,10 @@
+{
+  "environment_id": "0930f393-9d60-4e3a-a4e1-4394197537d2",
+  "client_id": "91a2f4d8-669c-4e68-835d-e92c6de8a66e",
+  "redirect_uri": "com.keyri-example-ping-identity://redirect",
+  "authorization_scope": "openid email profile p1:read:user",
+  "discovery_uri": "https://auth.pingone.com/0930f393-9d60-4e3a-a4e1-4394197537d2/as/.well-known/openid-configuration",
+  "application_uri": "https://api.pingone.com/v1/environments/%@/applications",
+  "token_method": "NONE",
+  "client_secret": "~8PNLJEraBF_vnBzaMsK_ABCPK25zSftGzGfi2D6qXslbUt7ar9V1HBsG9FH80Dqh"
+}
