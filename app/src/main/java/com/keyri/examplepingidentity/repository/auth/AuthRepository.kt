@@ -46,4 +46,10 @@ interface AuthRepository {
     fun getUserInfo(url: String, bearerToken: String): Flow<UserInfo>
 
     fun getJWKS(url: String): Flow<JWKS>
+
+    fun saveSignaturePublicKey(
+        url: String,
+        authorization: String,
+        publicKey: String
+    ): Flow<String>
 }

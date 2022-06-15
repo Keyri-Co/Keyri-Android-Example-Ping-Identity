@@ -3,11 +3,11 @@ package com.keyri.examplepingidentity.repository.auth
 import com.keyri.examplepingidentity.data.AccessToken
 import com.keyri.examplepingidentity.data.Config
 import com.keyri.examplepingidentity.data.JWKS
+import com.keyri.examplepingidentity.data.SaveSignaturePublicKeyBody
 import com.keyri.examplepingidentity.data.UserInfo
 import com.keyri.examplepingidentity.repository.AuthService
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.onEach
 
 class DefaultAuthRepository(
     private val service: AuthService,
@@ -15,9 +15,8 @@ class DefaultAuthRepository(
 ) : AuthRepository {
 
     override suspend fun readServerConfig(url: String): Flow<Unit> {
-        return service.getOauthConfig(url).onEach {
-            config.storeConfig(it)
-        }.map { }
+        return service.getOauthConfig(url)
+            .map { config.storeConfig(it) }
     }
 
     override fun obtainAccessTokenPost(
@@ -62,4 +61,12 @@ class DefaultAuthRepository(
         service.getUserInfo(url, bearerToken)
 
     override fun getJWKS(url: String): Flow<JWKS> = service.getJWKS(url)
+
+    override fun saveSignaturePublicKey(
+        url: String,
+        authorization: String,
+        publicKey: String
+    ): Flow<String> =
+        service.saveSignaturePublicKey(url, authorization, SaveSignaturePublicKeyBody(publicKey))
+            .map { it.nickname }
 }

@@ -73,16 +73,25 @@ class MainActivity : AppCompatActivity() {
                     lifecycleScope.launch(Dispatchers.IO) {
                         viewModel.proceedWithFlow(accessCode)
                             .onEach { accessToken ->
-                                val email = viewModel.getUserEmail(accessToken).first()
+                                val userInfo = viewModel.getUserEmail(accessToken).first()
+                                val email = userInfo.email
 
                                 val keyri = Keyri()
+
+                                val associationKey = keyri.getAssociationKey(email)
+
+                                viewModel.saveSignaturePublicKey(userInfo.sub, accessToken, associationKey)
+                                    .first()
 
                                 val payload = JSONObject().apply {
                                     put("token", Gson().toJson(accessToken))
                                     put("provider", "ping:email_password") // Optional
                                     put("timestamp", System.currentTimeMillis()) // Optional
-                                    put("associationKey", keyri.getAssociationKey(email)) // Optional
-                                    put("userSignature", keyri.getUserSignature(email, email)) // Optional
+                                    put("associationKey", associationKey) // Optional
+                                    put(
+                                        "userSignature",
+                                        keyri.getUserSignature(email, email)
+                                    ) // Optional
                                 }.toString()
 
                                 // Public user ID (email) is optional
