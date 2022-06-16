@@ -11,6 +11,7 @@ import com.keyri.examplepingidentity.data.UserInfo
 import com.keyri.examplepingidentity.repository.auth.AuthRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flatMapConcat
+import kotlinx.coroutines.flow.map
 
 class MainViewModel(private val authRepository: AuthRepository, private val config: Config) :
     ViewModel() {
@@ -40,12 +41,14 @@ class MainViewModel(private val authRepository: AuthRepository, private val conf
         accessToken: AccessToken,
         publicKey: String
     ): Flow<String> {
-        val url =
-            "https://api.pingone.com/v1/environments/0930f393-9d60-4e3a-a4e1-4394197537d2/users/$userId"
+        return config.readAuthConfig()
+            .map {
+                "https://api.pingone.com/v1/environments/${it.environmentId}/users/$userId"
+            }.flatMapConcat { url ->
+                val authorization = accessToken.tokenType + " " + accessToken.accessToken
 
-        val authorization = accessToken.tokenType + " " + accessToken.accessToken
-
-        return authRepository.saveSignaturePublicKey(url, authorization, publicKey)
+                authRepository.saveSignaturePublicKey(url, authorization, publicKey)
+            }
     }
 
     private fun proceedWithPKCE(accessCode: String, configData: ConfigData): Flow<AccessToken> {
