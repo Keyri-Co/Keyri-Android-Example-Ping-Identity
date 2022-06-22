@@ -18,7 +18,7 @@ private fun provideAuthService(retrofit: Retrofit) = retrofit.create(AuthService
 
 private fun provideRetrofit(client: OkHttpClient): Retrofit =
     Retrofit.Builder()
-        .baseUrl("http://google.com")
+        .baseUrl("https://api.pingone.com/")
         .client(client)
         .addConverterFactory(GsonConverterFactory.create())
         .addCallAdapterFactory(FlowCallAdapterFactory())

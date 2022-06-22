@@ -4,7 +4,9 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="..\:/Users/kulag/AndroidStudioProjects/KeyriAndroidExamplePingIdentity/app/src/main/res/drawable/ic_ping_identity.xml" value="0.1115" />
-        <entry key="..\:/Users/kulag/AndroidStudioProjects/KeyriAndroidExamplePingIdentity/app/src/main/res/layout/activity_main.xml" value="0.1" />
+        <entry key="..\:/Users/kulag/AndroidStudioProjects/KeyriAndroidExamplePingIdentity/app/src/main/res/layout/activity_login.xml" value="0.25" />
+        <entry key="..\:/Users/kulag/AndroidStudioProjects/KeyriAndroidExamplePingIdentity/app/src/main/res/layout/activity_main.xml" value="0.25" />
+        <entry key="..\:/Users/kulag/AndroidStudioProjects/KeyriAndroidExamplePingIdentity/app/src/main/res/layout/activity_register.xml" value="0.25" />
       </map>
     </option>
   </component>

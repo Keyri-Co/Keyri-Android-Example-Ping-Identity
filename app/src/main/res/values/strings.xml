@@ -1,5 +1,13 @@
 <resources>
     <string name="app_name">Keyri Android Example Ping Identity</string>
     <string name="ping_example_title">Ping Identity Example</string>
-    <string name="ping_auth">Authenticate with Ping Identity</string>
+    <string name="ping_login">Login with Ping Identity</string>
+    <string name="ping_register">Register with Ping Identity</string>
+    <string name="login">Login</string>
+    <string name="register">Register</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="given_name">Given name</string>
+    <string name="family">Family</string>
+    <string name="username">Username</string>
 </resources>
