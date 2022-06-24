@@ -42,12 +42,11 @@ class LoginActivity : AppCompatActivity() {
                         val clientSecret = getString(R.string.client_secret)
                         val environmentID = getString(R.string.environment_id)
                         val tokenEndpoint = getString(R.string.token_endpoint)
-                        val usersEndpoint = getString(R.string.users)
 
                         viewModel.getAccessTokenWithBasic(clientId, clientSecret, tokenEndpoint)
                             .onEach { accessToken ->
                                 val user =
-                                    viewModel.getUser(email, usersEndpoint, accessToken).first()
+                                    viewModel.getUser(email, environmentID, accessToken).first()
 
                                 val associationKey = keyri.getAssociationKey(user.email)
 

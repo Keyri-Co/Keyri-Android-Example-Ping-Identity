@@ -25,6 +25,8 @@ interface AuthRepository {
 
     fun getUserInfo(url: String, bearerToken: String): Flow<UserResponse>
 
+    fun getUsers(bearerToken: String, environmentId: String): Flow<List<UserResponse>>
+
     fun saveSignaturePublicKey(
         bearerToken: String,
         environmentId: String,

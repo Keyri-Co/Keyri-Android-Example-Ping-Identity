@@ -36,6 +36,11 @@ class DefaultAuthRepository(private val service: AuthService) : AuthRepository {
         return service.createUser(bearerToken, environmentId, request)
     }
 
+    override fun getUsers(bearerToken: String, environmentId: String): Flow<List<UserResponse>> {
+        return service.getUsers(bearerToken, environmentId)
+            .map { it._embedded.users }
+    }
+
     override fun obtainAccessTokenBasic(
         url: String,
         basicHeader: String,

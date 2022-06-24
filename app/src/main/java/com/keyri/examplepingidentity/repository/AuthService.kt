@@ -4,6 +4,7 @@ import com.keyri.examplepingidentity.data.AccessToken
 import com.keyri.examplepingidentity.data.create_user.request.CreateUserBody
 import com.keyri.examplepingidentity.data.SaveSignaturePublicKeyBody
 import com.keyri.examplepingidentity.data.create_user.response.UserResponse
+import com.keyri.examplepingidentity.data.create_user.response.UsersResponse
 import kotlinx.coroutines.flow.Flow
 import retrofit2.http.Body
 import retrofit2.http.Field
@@ -33,6 +34,13 @@ interface AuthService {
         @Url url: String,
         @Header("Authorization") bearerToken: String
     ): Flow<UserResponse>
+
+    @Headers("Content-Type: application/json")
+    @GET("v1/environments/{environmentId}/users")
+    fun getUsers(
+        @Header("Authorization") bearerToken: String,
+        @Path("environmentId") environmentId: String
+    ): Flow<UsersResponse>
 
     @Headers("Content-Type: application/vnd.pingidentity.user.import+json")
     @POST("v1/environments/{environmentId}/users")
