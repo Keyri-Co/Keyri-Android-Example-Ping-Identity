@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="client_id">6b9ba4f1-eecc-404a-84ed-e0062855bb52</string>
-    <string name="client_secret">u0URr.pRF-aWWeiRh30ew8v741-PcJBir5YEYVDd6uGXv4eABBjLkDvG5tYxgfFx</string>
+    <string name="client_id">91a2f4d8-669c-4e68-835d-e92c6de8a66e</string>
+    <string name="client_secret">8PNLJEraBF_vnBzaMsK_ABCPK25zSftGzGfi2D6qXslbUt7ar9V1HBsG9FH80Dqh</string>
     <string name="environment_id">0930f393-9d60-4e3a-a4e1-4394197537d2</string>
-    <string name="population_id">0774f1a6-aea0-4c09-a6d1-82b9e8b2b047</string>
-    <string name="token_endpoint">https://auth.pingone.com/0930f393-9d60-4e3a-a4e1-4394197537d2/as/token</string>
-    <string name="users">https://api.pingone.com/v1/environments/0930f393-9d60-4e3a-a4e1-4394197537d2/users/</string>
+    <string name="redirect_uri">com.ping-keyri-example://redirect</string>
+    <string name="authorization_scope">openid email profile p1:read:user p1:update:user</string>
+    <string name="discovery_uri">https://auth.pingone.com/%s/as/.well-known/openid-configuration</string>
+    <string name="application_uri">https://api.pingone.com/v1/environments/%@/applications</string>
+    <string name="token_method">NONE</string>
 </resources>

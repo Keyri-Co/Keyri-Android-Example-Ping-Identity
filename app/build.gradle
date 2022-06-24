@@ -14,6 +14,11 @@ android {
         versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+
+        //for redirect
+        manifestPlaceholders = [
+                'appAuthRedirectScheme': 'com.ping-keyri-example://redirect'
+        ]
     }
 
     buildTypes {
@@ -61,7 +66,10 @@ dependencies {
     implementation 'tech.thdev:flow-call-adapter-factory:1.0.0'
 
     // Keyri
-    implementation 'com.github.Keyri-Co:keyri-android-whitelabel-sdk:0.9.0'
+    implementation 'com.github.Keyri-Co:keyri-android-whitelabel-sdk:0.9.6'
+
+    // App auth
+    implementation 'net.openid:appauth:0.11.1'
 
     // Koin
     implementation "io.insert-koin:koin-android:3.2.0"

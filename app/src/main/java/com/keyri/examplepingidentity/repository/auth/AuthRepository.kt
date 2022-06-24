@@ -1,21 +1,21 @@
 package com.keyri.examplepingidentity.repository.auth
 
 import com.keyri.examplepingidentity.data.AccessToken
+import com.keyri.examplepingidentity.data.ServerConfig
 import com.keyri.examplepingidentity.data.create_user.response.UserResponse
 import kotlinx.coroutines.flow.Flow
 
 interface AuthRepository {
 
-    fun register(
-        givenName: String,
-        family: String,
-        email: String,
-        username: String,
-        password: String,
-        populationID: String,
-        environmentId: String,
-        accessToken: AccessToken
-    ): Flow<UserResponse>
+    fun readServerConfig(url: String): Flow<ServerConfig>
+
+    fun obtainAccessToken(
+        url: String,
+        clientId: String,
+        grantType: String,
+        code: String,
+        redirectUri: String
+    ): Flow<AccessToken>
 
     fun obtainAccessTokenBasic(
         url: String,

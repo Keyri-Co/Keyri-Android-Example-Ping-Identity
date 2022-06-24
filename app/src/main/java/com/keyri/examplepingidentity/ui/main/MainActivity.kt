@@ -1,16 +1,22 @@
 package com.keyri.examplepingidentity.ui.main
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
+import android.net.Uri
 import android.os.Bundle
 import android.view.View
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
 import com.google.android.material.snackbar.Snackbar
 import com.keyri.examplepingidentity.R
+import com.keyri.examplepingidentity.data.Consts
 import com.keyri.examplepingidentity.databinding.ActivityMainBinding
-import com.keyri.examplepingidentity.ui.login.LoginActivity
-import com.keyri.examplepingidentity.ui.register.RegisterActivity
 import com.keyrico.keyrisdk.ui.auth.AuthWithScannerActivity
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.launch
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class MainActivity : AppCompatActivity() {
 
@@ -21,15 +27,10 @@ class MainActivity : AppCompatActivity() {
             showMessage(findViewById(R.id.llRoot), text)
         }
 
-    private val authLauncher =
-        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-            val payload = result.data?.getStringExtra(KEY_PAYLOAD)
-            val email = result.data?.getStringExtra(KEY_EMAIL)
+    // TODO 1. Add authorization
+    // TODO 2. Change README.md
 
-            if (result.resultCode == RESULT_OK && email != null && payload != null) {
-                keyriAuth(email, payload)
-            }
-        }
+    private val viewModel by viewModel<MainViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -37,13 +38,43 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         with(binding) {
-            bPingLogin.setOnClickListener {
-                startAuthActivity(LoginActivity::class.java)
+            bPingAuth.setOnClickListener {
+                authorize()
             }
+        }
+    }
 
-            bPingRegister.setOnClickListener {
-                startAuthActivity(RegisterActivity::class.java)
+    override fun onStart() {
+        super.onStart()
+        intent.dataString?.let { Uri.parse(it).getQueryParameter(Consts.CODE) }?.let { code ->
+            val clientId = getString(R.string.client_id)
+            val redirectUri = getString(R.string.redirect_uri)
+
+            lifecycleScope.launch(Dispatchers.IO) {
+                viewModel.proceedWithCode(code, clientId, redirectUri)
+                    // TODO Handle result
+                    .collect()
             }
+        }
+    }
+
+    private fun authorize() {
+        val discoveryUri = getString(R.string.discovery_uri)
+        val environmentId = getString(R.string.environment_id)
+
+        lifecycleScope.launch(Dispatchers.IO) {
+            viewModel.authorize(discoveryUri, environmentId)
+                .onEach {
+                    val authorizationUrl = Uri.parse(it.authorizationEndpoint)
+                        .buildUpon()
+                        .appendQueryParameter(Consts.RESPONSE_TYPE, Consts.CODE)
+                        .appendQueryParameter(Consts.CLIENT_ID, getString(R.string.client_id))
+                        .appendQueryParameter(Consts.SCOPE, getString(R.string.authorization_scope))
+                        .appendQueryParameter(Consts.REDIRECT_URI, getString(R.string.redirect_uri))
+                        .build()
+
+                    startActivity(Intent(Intent.ACTION_VIEW, authorizationUrl))
+                }.collect()
         }
     }
 
@@ -59,14 +90,5 @@ class MainActivity : AppCompatActivity() {
 
     private fun showMessage(view: View, msg: String) {
         Snackbar.make(view, msg, Snackbar.LENGTH_LONG).show()
-    }
-
-    private fun startAuthActivity(clazz: Class<*>) {
-        Intent(this@MainActivity, clazz).let(authLauncher::launch)
-    }
-
-    companion object {
-        const val KEY_EMAIL = "EMAIL"
-        const val KEY_PAYLOAD = "PAYLOAD"
     }
 }

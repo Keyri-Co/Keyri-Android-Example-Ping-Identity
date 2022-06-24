@@ -26,25 +26,13 @@
     </com.google.android.material.appbar.AppBarLayout>
 
     <com.google.android.material.button.MaterialButton
-        android:id="@+id/bPingLogin"
+        android:id="@+id/bPingAuth"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_marginTop="24dp"
         android:backgroundTint="@color/purple_500"
         android:text="@string/ping_login"
-        app:icon="@drawable/ic_ping_identity"
-        app:iconPadding="16dp"
-        app:iconTint="@null" />
-
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/bPingRegister"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginTop="8dp"
-        android:backgroundTint="@color/purple_500"
-        android:text="@string/ping_register"
         app:icon="@drawable/ic_ping_identity"
         app:iconPadding="16dp"
         app:iconTint="@null" />
