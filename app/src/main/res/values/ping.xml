@@ -7,5 +7,6 @@
     <string name="authorization_scope">openid email profile p1:read:user p1:update:user</string>
     <string name="discovery_uri">https://auth.pingone.com/%s/as/.well-known/openid-configuration</string>
     <string name="application_uri">https://api.pingone.com/v1/environments/%@/applications</string>
+    <string name="user_info_uri">https://auth.pingone.com/0930f393-9d60-4e3a-a4e1-4394197537d2/as/userinfo</string>
     <string name="token_method">NONE</string>
 </resources>
