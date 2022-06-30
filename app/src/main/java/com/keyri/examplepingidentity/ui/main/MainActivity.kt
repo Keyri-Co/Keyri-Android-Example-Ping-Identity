@@ -47,7 +47,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun keyriAuth(publicUserId: String?, payload: String) {
+    private fun keyriAuth(publicUserId: String, payload: String) {
         val intent = Intent(this, AuthWithScannerActivity::class.java).apply {
             putExtra(AuthWithScannerActivity.APP_KEY, "NJOFSuP652zthaoHaeDmImZ2CTh4NGqX")
             putExtra(AuthWithScannerActivity.PUBLIC_USER_ID, publicUserId)
