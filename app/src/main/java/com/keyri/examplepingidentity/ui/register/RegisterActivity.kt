@@ -7,7 +7,6 @@ import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
-import com.google.gson.Gson
 import com.keyri.examplepingidentity.R
 import com.keyri.examplepingidentity.databinding.ActivityRegisterBinding
 import com.keyri.examplepingidentity.ui.main.MainActivity.Companion.KEY_EMAIL
@@ -20,6 +19,7 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.onEach
 import org.json.JSONObject
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import kotlin.random.Random
 
 class RegisterActivity : AppCompatActivity() {
 
@@ -72,19 +72,14 @@ class RegisterActivity : AppCompatActivity() {
                                     associationKey
                                 ).first()
 
-                                val data = JSONObject().apply {
-                                    put("timestamp", timestamp) // Optional
-                                    put("username", username) // Optional
-                                    put("userID", user.username) // Optional
-                                }.toString()
-
-                                val userSignature = keyri.getUserSignature(email, data)
+                                val timestampNonce =
+                                    "${System.currentTimeMillis()}_${Random.nextInt()}"
+                                val signature = keyri.getUserSignature(email, timestampNonce)
 
                                 val payload = JSONObject().apply {
-                                    put("token", Gson().toJson(accessToken))
-                                    put("associationKey", associationKey) // Optional
-                                    put("data", data) // Optional
-                                    put("userSignature", userSignature) // Optional
+                                    put("username", user.username)
+                                    put("timestamp_nonce", timestampNonce)
+                                    put("userSignature", signature)
                                 }.toString()
 
                                 val intent = Intent().apply {

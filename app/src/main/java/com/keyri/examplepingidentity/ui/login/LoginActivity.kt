@@ -7,7 +7,6 @@ import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
-import com.google.gson.Gson
 import com.keyri.examplepingidentity.R
 import com.keyri.examplepingidentity.databinding.ActivityLoginBinding
 import com.keyri.examplepingidentity.ui.main.MainActivity
@@ -19,6 +18,7 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.onEach
 import org.json.JSONObject
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import kotlin.random.Random
 
 class LoginActivity : AppCompatActivity() {
 
@@ -48,28 +48,14 @@ class LoginActivity : AppCompatActivity() {
                                 val user =
                                     viewModel.getUser(email, environmentID, accessToken).first()
 
-                                val associationKey = keyri.getAssociationKey(user.email)
-
-                                viewModel.saveSignaturePublicKey(
-                                    user.id,
-                                    environmentID,
-                                    accessToken,
-                                    associationKey
-                                ).first()
-
-                                val data = JSONObject().apply {
-                                    put("timestamp", System.currentTimeMillis()) // Optional
-                                    put("username", user.username) // Optional
-                                    put("userID", user.id) // Optional
-                                }.toString()
-
-                                val userSignature = keyri.getUserSignature(email, data)
+                                val timestampNonce =
+                                    "${System.currentTimeMillis()}_${Random.nextInt()}"
+                                val signature = keyri.getUserSignature(email, timestampNonce)
 
                                 val payload = JSONObject().apply {
-                                    put("token", Gson().toJson(accessToken))
-                                    put("associationKey", associationKey) // Optional
-                                    put("data", data) // Optional
-                                    put("userSignature", userSignature) // Optional
+                                    put("username", user.username)
+                                    put("timestamp_nonce", timestampNonce)
+                                    put("userSignature", signature)
                                 }.toString()
 
                                 val intent = Intent().apply {
