@@ -24,7 +24,7 @@ class DefaultAuthRepository(private val service: AuthService) : AuthRepository {
         populationID: String,
         environmentId: String,
         accessToken: AccessToken
-    ): Flow<UserResponse> {
+    ): Flow<Result<UserResponse>> {
         val bearerToken = accessToken.tokenType + " " + accessToken.accessToken
 
         val name = Name(givenName, family)
@@ -36,18 +36,24 @@ class DefaultAuthRepository(private val service: AuthService) : AuthRepository {
         return service.createUser(bearerToken, environmentId, request)
     }
 
-    override fun getUsers(bearerToken: String, environmentId: String): Flow<List<UserResponse>> {
+    override fun getUsers(
+        bearerToken: String,
+        environmentId: String
+    ): Flow<Result<List<UserResponse>>> {
         return service.getUsers(bearerToken, environmentId)
-            .map { it._embedded.users }
+            .map { response ->
+                response.getOrNull()?._embedded?.users?.let { Result.success(it) }
+                    ?: Result.failure(Exception("Failed to fetch Users"))
+            }
     }
 
     override fun obtainAccessTokenBasic(
         url: String,
         basicHeader: String,
         grantType: String
-    ): Flow<AccessToken> = service.obtainAccessTokenBasic(url, basicHeader, grantType)
+    ): Flow<Result<AccessToken>> = service.obtainAccessTokenBasic(url, basicHeader, grantType)
 
-    override fun getUserInfo(url: String, bearerToken: String): Flow<UserResponse> =
+    override fun getUserInfo(url: String, bearerToken: String): Flow<Result<UserResponse>> =
         service.getUserInfo(url, bearerToken)
 
     override fun saveSignaturePublicKey(
@@ -55,11 +61,11 @@ class DefaultAuthRepository(private val service: AuthService) : AuthRepository {
         environmentId: String,
         userId: String,
         publicKey: String
-    ): Flow<String> =
+    ): Flow<Result<SaveSignaturePublicKeyBody>> =
         service.saveSignaturePublicKey(
             bearerToken,
             environmentId,
             userId,
             SaveSignaturePublicKeyBody(publicKey)
-        ).map { it.nickname }
+        )
 }

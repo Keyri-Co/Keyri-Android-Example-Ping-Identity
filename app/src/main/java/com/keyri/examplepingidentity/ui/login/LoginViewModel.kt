@@ -18,9 +18,8 @@ class LoginViewModel(private val authRepository: AuthRepository) : ViewModel() {
     ): Flow<UserResponse> {
         val token = accessToken.tokenType + " " + accessToken.accessToken
 
-        return authRepository.getUsers(token, environmentId).map {
-            it.first { user -> user.email == email }
-        }
+        return authRepository.getUsers(token, environmentId)
+            .map { it.getOrThrow().first { user -> user.email == email } }
     }
 
     fun getAccessTokenWithBasic(
@@ -35,7 +34,7 @@ class LoginViewModel(private val authRepository: AuthRepository) : ViewModel() {
             url = tokenEndpoint,
             basicHeader = basic,
             grantType = Consts.CLIENT_CREDENTIALS
-        )
+        ).map { it.getOrThrow() }
     }
 
     fun saveSignaturePublicKey(
@@ -51,6 +50,6 @@ class LoginViewModel(private val authRepository: AuthRepository) : ViewModel() {
             environmentId = environmentId,
             userId = userId,
             publicKey = publicKey
-        )
+        ).map { it.getOrThrow().nickname }
     }
 }

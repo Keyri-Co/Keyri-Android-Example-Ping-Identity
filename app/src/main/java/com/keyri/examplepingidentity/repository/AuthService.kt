@@ -26,21 +26,21 @@ interface AuthService {
         @Url url: String,
         @Header("Authorization") basicAuth: String,
         @Field("grant_type") grantType: String
-    ): Flow<AccessToken>
+    ): Flow<Result<AccessToken>>
 
     @Headers("Content-Type: application/json")
     @GET
     fun getUserInfo(
         @Url url: String,
         @Header("Authorization") bearerToken: String
-    ): Flow<UserResponse>
+    ): Flow<Result<UserResponse>>
 
     @Headers("Content-Type: application/json")
     @GET("v1/environments/{environmentId}/users")
     fun getUsers(
         @Header("Authorization") bearerToken: String,
         @Path("environmentId") environmentId: String
-    ): Flow<UsersResponse>
+    ): Flow<Result<UsersResponse>>
 
     @Headers("Content-Type: application/vnd.pingidentity.user.import+json")
     @POST("v1/environments/{environmentId}/users")
@@ -48,7 +48,7 @@ interface AuthService {
         @Header("Authorization") bearerToken: String,
         @Path("environmentId") environmentId: String,
         @Body data: CreateUserBody
-    ): Flow<UserResponse>
+    ): Flow<Result<UserResponse>>
 
     @Headers("Content-Type: application/json")
     @PATCH("v1/environments/{environmentId}/users/{userId}/")
@@ -57,5 +57,5 @@ interface AuthService {
         @Path("environmentId") environmentId: String,
         @Path("userId") userId: String,
         @Body request: SaveSignaturePublicKeyBody
-    ): Flow<SaveSignaturePublicKeyBody>
+    ): Flow<Result<SaveSignaturePublicKeyBody>>
 }

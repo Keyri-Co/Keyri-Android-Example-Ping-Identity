@@ -6,6 +6,7 @@ import android.util.Log
 import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.isVisible
 import androidx.lifecycle.lifecycleScope
 import com.keyri.examplepingidentity.R
 import com.keyri.examplepingidentity.databinding.ActivityRegisterBinding
@@ -19,19 +20,24 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.onEach
 import org.json.JSONObject
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import retrofit2.HttpException
 import kotlin.random.Random
 
 class RegisterActivity : AppCompatActivity() {
 
     private val viewModel by viewModel<RegisterViewModel>()
 
+    private lateinit var binding: ActivityRegisterBinding
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val binding = ActivityRegisterBinding.inflate(layoutInflater)
+        binding = ActivityRegisterBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         with(binding) {
             bRegister.setOnClickListener {
+                progress.isVisible = true
+
                 val givenName = etGivenName.getNotEmptyText()
                 val family = etFamily.getNotEmptyText()
                 val email = etEmail.getNotEmptyText()
@@ -72,6 +78,8 @@ class RegisterActivity : AppCompatActivity() {
                                     associationKey
                                 ).first()
 
+                                progress.isVisible = false
+
                                 val timestampNonce =
                                     "${System.currentTimeMillis()}_${Random.nextInt()}"
                                 val signature = keyri.getUserSignature(email, timestampNonce)
@@ -102,9 +110,22 @@ class RegisterActivity : AppCompatActivity() {
         return text?.takeIf { it.isNotEmpty() }?.toString()
     }
 
+    @Suppress("BlockingMethodInNonBlockingContext")
     private fun <T> Flow<T>.handleErrors(): Flow<T> = catch { e ->
-        Log.e("Keyri example", e.message.toString())
+        binding.progress.isVisible = false
 
-        Toast.makeText(this@RegisterActivity, e.message, Toast.LENGTH_LONG).show()
+        val message = if (e is HttpException) {
+            val errorBody = e.response()?.errorBody()
+
+            errorBody?.string()?.let {
+                JSONObject(it).getString("message")
+            } ?: e.message ?: "Something went wrong"
+        } else {
+            e.message.toString()
+        }
+
+        Log.e("Keyri example", message)
+
+        Toast.makeText(this@RegisterActivity, message, Toast.LENGTH_LONG).show()
     }
 }
