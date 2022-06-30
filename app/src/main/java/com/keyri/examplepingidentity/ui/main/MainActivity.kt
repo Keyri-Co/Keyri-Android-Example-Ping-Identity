@@ -22,6 +22,7 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import org.json.JSONObject
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import kotlin.random.Random
 
 class MainActivity : AppCompatActivity() {
 
@@ -97,48 +98,19 @@ class MainActivity : AppCompatActivity() {
                 environmentId,
                 user.id,
                 associationKey
-            )
-                .collectLatest {
-                    val userData = JSONObject().apply {
-                        put("id", user.id)
-                        put("username", user.username)
-                        put("email", user.email)
-                        put("createdAt", user.createdAt)
-                        put("updatedAt", user.updatedAt)
-                        put("enabled", user.enabled)
-                    }
+            ).collectLatest {
+                val timestampNonce = "${System.currentTimeMillis()}_${Random.nextInt()}"
+                val signature = keyri.getUserSignature(email, timestampNonce)
 
-                    val tokenData = JSONObject().apply {
-                        put("accessToken", accessToken.accessToken)
-                        put("idToken", accessToken.idToken)
-                        put("tokenType", accessToken.tokenType)
-                        put("expiresIn", accessToken.expiresIn)
-                        put("scope", accessToken.scope)
-                    }
+                val payload = JSONObject().apply {
+                    put("username", user.username)
+                    put("timestamp_nonce", timestampNonce)
+                    put("userSignature", signature) // Optional
+                }.toString()
 
-                    val data = JSONObject().apply {
-                        put("user", userData)
-                        put("token", tokenData)
-                    }
-
-                    val signingData = JSONObject().apply {
-                        put("timestamp", System.currentTimeMillis())
-                        put("email", user.email)
-                        put("id", user.id)
-                    }.toString()
-
-                    val signature = keyri.getUserSignature(email, signingData)
-
-                    val payload = JSONObject().apply {
-                        put("data", data)
-                        put("signingData", signingData)
-                        put("userSignature", signature) // Optional
-                        put("associationKey", associationKey) // Optional
-                    }.toString()
-
-                    // Public user ID (email) is optional
-                    keyriAuth(email, payload)
-                }
+                // Public user ID (email) is optional
+                keyriAuth(email, payload)
+            }
         }
     }
 
