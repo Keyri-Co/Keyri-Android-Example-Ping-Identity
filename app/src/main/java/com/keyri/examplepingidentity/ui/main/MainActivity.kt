@@ -105,7 +105,7 @@ class MainActivity : AppCompatActivity() {
                 val payload = JSONObject().apply {
                     put("username", user.username)
                     put("timestamp_nonce", timestampNonce)
-                    put("userSignature", signature) // Optional
+                    put("userSignature", signature)
                 }.toString()
 
                 // Public user ID (email) is optional
