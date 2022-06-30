@@ -24,8 +24,6 @@ class LoginActivity : AppCompatActivity() {
 
     private val viewModel by viewModel<LoginViewModel>()
 
-    private val keyri by lazy(::Keyri)
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val binding = ActivityLoginBinding.inflate(layoutInflater)
@@ -48,6 +46,17 @@ class LoginActivity : AppCompatActivity() {
                                 val user =
                                     viewModel.getUser(email, environmentID, accessToken).first()
 
+                                val keyri = Keyri()
+
+                                val associationKey  = keyri.getAssociationKey(email)
+
+                                viewModel.saveSignaturePublicKey(
+                                    user.id,
+                                    environmentID,
+                                    accessToken,
+                                    associationKey
+                                ).first()
+
                                 val timestampNonce =
                                     "${System.currentTimeMillis()}_${Random.nextInt()}"
                                 val signature = keyri.getUserSignature(email, timestampNonce)
@@ -56,6 +65,7 @@ class LoginActivity : AppCompatActivity() {
                                     put("username", user.username)
                                     put("timestamp_nonce", timestampNonce)
                                     put("userSignature", signature)
+                                    put("associationKey ", associationKey)
                                 }.toString()
 
                                 val intent = Intent().apply {

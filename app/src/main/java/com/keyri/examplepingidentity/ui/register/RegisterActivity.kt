@@ -25,8 +25,6 @@ class RegisterActivity : AppCompatActivity() {
 
     private val viewModel by viewModel<RegisterViewModel>()
 
-    private val keyri by lazy(::Keyri)
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val binding = ActivityRegisterBinding.inflate(layoutInflater)
@@ -62,6 +60,8 @@ class RegisterActivity : AppCompatActivity() {
                                     environmentID,
                                     accessToken
                                 ).first()
+
+                                val keyri = Keyri()
 
                                 val associationKey = keyri.getAssociationKey(user.email)
 
