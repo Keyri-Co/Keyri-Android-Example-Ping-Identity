@@ -106,6 +106,7 @@ class MainActivity : AppCompatActivity() {
                     put("username", user.username)
                     put("timestamp_nonce", timestampNonce)
                     put("userSignature", signature)
+                    put("associationKey", associationKey)
                 }.toString()
 
                 // Public user ID (email) is optional
