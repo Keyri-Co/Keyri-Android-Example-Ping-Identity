@@ -73,18 +73,18 @@ class RegisterActivity : AppCompatActivity() {
                                 ).first()
 
                                 val data = JSONObject().apply {
-                                    put("timestamp", timestamp) // Optional
-                                    put("username", username) // Optional
-                                    put("userID", user.username) // Optional
+                                    put("timestamp", timestamp)
+                                    put("username", username)
+                                    put("userID", user.username)
                                 }.toString()
 
                                 val userSignature = keyri.getUserSignature(email, data)
 
                                 val payload = JSONObject().apply {
                                     put("token", Gson().toJson(accessToken))
-                                    put("associationKey", associationKey) // Optional
-                                    put("data", data) // Optional
-                                    put("userSignature", userSignature) // Optional
+                                    put("associationKey", associationKey)
+                                    put("data", data)
+                                    put("userSignature", userSignature)
                                 }.toString()
 
                                 val intent = Intent().apply {

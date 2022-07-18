@@ -63,6 +63,7 @@ token_endpoint. Add all this params to your project as following:
     <string name="environment_id">ENVIRONMENT_ID</string>
     <string name="population_id">POPULATION_ID</string>
     <string name="token_endpoint">TOKEN_ENDPOINT</string>
+    <string name="users">USERS_ENDPOINT</string>
 </resources>
 ```
 
@@ -82,6 +83,7 @@ where:
 - `population_id`: Users Population ID. You can find this value at your Identities -> Populations
   page.
 - `token_endpoint`: Your token endpoint. Needed to get access token for API.
+- `users_endpoint`: Get users endpoint. Needed to get list of Users.
 
 ### Prerequisites
 
@@ -125,6 +127,43 @@ private val easyKeyriAuthLauncher =
     registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
         // Process authentication result
     }
+
+private fun authenticate() {
+    viewModel.getAccessTokenWithBasic(clientId, clientSecret, tokenEndpoint)
+        .onEach { accessToken ->
+            val timestamp = System.currentTimeMillis()
+
+            val user = viewModel.register(
+                givenName,
+                family,
+                email,
+                username + "_$timestamp",
+                password,
+                populationID,
+                environmentID,
+                accessToken
+            ).first()
+
+            val associationKey = keyri.getAssociationKey(user.email)
+
+            val data = JSONObject().apply {
+                put("timestamp", timestamp)
+                put("username", username)
+                put("userID", user.username)
+            }.toString()
+
+            val userSignature = keyri.getUserSignature(email, data)
+
+            val payload = JSONObject().apply {
+                put("token", Gson().toJson(accessToken))
+                put("associationKey", associationKey)
+                put("data", data)
+                put("userSignature", userSignature)
+            }.toString()
+
+            keyriAuth(user.email, payload)
+        }
+}
 
 private fun keyriAuth(publicUserId: String?, payload: String) {
     val intent = Intent(this, AuthWithScannerActivity::class.java).apply {
