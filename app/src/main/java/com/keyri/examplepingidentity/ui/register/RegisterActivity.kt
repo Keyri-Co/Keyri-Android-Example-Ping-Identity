@@ -6,8 +6,8 @@ import android.util.Log
 import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.isVisible
 import androidx.lifecycle.lifecycleScope
-import com.google.gson.Gson
 import com.keyri.examplepingidentity.R
 import com.keyri.examplepingidentity.databinding.ActivityRegisterBinding
 import com.keyri.examplepingidentity.ui.main.MainActivity.Companion.KEY_EMAIL
@@ -20,20 +20,24 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.onEach
 import org.json.JSONObject
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import retrofit2.HttpException
+import kotlin.random.Random
 
 class RegisterActivity : AppCompatActivity() {
 
     private val viewModel by viewModel<RegisterViewModel>()
 
-    private val keyri by lazy(::Keyri)
+    private lateinit var binding: ActivityRegisterBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val binding = ActivityRegisterBinding.inflate(layoutInflater)
+        binding = ActivityRegisterBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         with(binding) {
             bRegister.setOnClickListener {
+                progress.isVisible = true
+
                 val givenName = etGivenName.getNotEmptyText()
                 val family = etFamily.getNotEmptyText()
                 val email = etEmail.getNotEmptyText()
@@ -63,6 +67,8 @@ class RegisterActivity : AppCompatActivity() {
                                     accessToken
                                 ).first()
 
+                                val keyri = Keyri()
+
                                 val associationKey = keyri.getAssociationKey(user.email)
 
                                 viewModel.saveSignaturePublicKey(
@@ -72,19 +78,16 @@ class RegisterActivity : AppCompatActivity() {
                                     associationKey
                                 ).first()
 
-                                val data = JSONObject().apply {
-                                    put("timestamp", timestamp)
-                                    put("username", username)
-                                    put("userID", user.username)
-                                }.toString()
+                                progress.isVisible = false
 
-                                val userSignature = keyri.getUserSignature(email, data)
+                                val timestampNonce =
+                                    "${System.currentTimeMillis()}_${Random.nextInt()}"
+                                val signature = keyri.getUserSignature(email, timestampNonce)
 
                                 val payload = JSONObject().apply {
-                                    put("token", Gson().toJson(accessToken))
-                                    put("associationKey", associationKey)
-                                    put("data", data)
-                                    put("userSignature", userSignature)
+                                    put("username", user.username)
+                                    put("timestamp_nonce", timestampNonce)
+                                    put("userSignature", signature)
                                 }.toString()
 
                                 val intent = Intent().apply {
@@ -107,9 +110,22 @@ class RegisterActivity : AppCompatActivity() {
         return text?.takeIf { it.isNotEmpty() }?.toString()
     }
 
+    @Suppress("BlockingMethodInNonBlockingContext")
     private fun <T> Flow<T>.handleErrors(): Flow<T> = catch { e ->
-        Log.e("Keyri example", e.message.toString())
+        binding.progress.isVisible = false
 
-        Toast.makeText(this@RegisterActivity, e.message, Toast.LENGTH_LONG).show()
+        val message = if (e is HttpException) {
+            val errorBody = e.response()?.errorBody()
+
+            errorBody?.string()?.let {
+                JSONObject(it).getString("message")
+            } ?: e.message ?: "Something went wrong"
+        } else {
+            e.message.toString()
+        }
+
+        Log.e("Keyri example", message)
+
+        Toast.makeText(this@RegisterActivity, message, Toast.LENGTH_LONG).show()
     }
 }

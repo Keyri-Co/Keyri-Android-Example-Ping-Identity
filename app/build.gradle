@@ -45,8 +45,8 @@ dependencies {
 
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.1"
 
-    implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.4.1'
-    implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.4.1'
+    implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.5.0'
+    implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.5.0'
 
     implementation "androidx.activity:activity-ktx:1.4.0"
 
@@ -58,10 +58,9 @@ dependencies {
     implementation 'com.squareup.retrofit2:retrofit:2.9.0'
     implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
     implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
-    implementation 'tech.thdev:flow-call-adapter-factory:1.0.0'
 
     // Keyri
-    implementation 'com.github.Keyri-Co:keyri-android-whitelabel-sdk:0.9.0'
+    implementation 'com.github.Keyri-Co:keyri-android-whitelabel-sdk:0.9.61'
 
     // Koin
     implementation "io.insert-koin:koin-android:3.2.0"

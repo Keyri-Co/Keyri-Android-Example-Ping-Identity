@@ -1,6 +1,5 @@
 package com.keyri.examplepingidentity.ui.login
 
-import android.content.SharedPreferences
 import android.util.Base64
 import androidx.lifecycle.ViewModel
 import com.keyri.examplepingidentity.data.AccessToken
@@ -8,23 +7,19 @@ import com.keyri.examplepingidentity.data.Consts
 import com.keyri.examplepingidentity.data.create_user.response.UserResponse
 import com.keyri.examplepingidentity.repository.auth.AuthRepository
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 
-class LoginViewModel(
-    private val authRepository: AuthRepository,
-    private val preferences: SharedPreferences
-) : ViewModel() {
+class LoginViewModel(private val authRepository: AuthRepository) : ViewModel() {
 
     fun getUser(
         email: String,
-        userinfoEndpoint: String,
+        environmentId: String,
         accessToken: AccessToken
     ): Flow<UserResponse> {
-        val userId = preferences.getString(email, null)
+        val token = accessToken.tokenType + " " + accessToken.accessToken
 
-        return authRepository.getUserInfo(
-            userinfoEndpoint + "$userId",
-            accessToken.tokenType + " " + accessToken.accessToken
-        )
+        return authRepository.getUsers(token, environmentId)
+            .map { it.getOrThrow().first { user -> user.email == email } }
     }
 
     fun getAccessTokenWithBasic(
@@ -39,7 +34,7 @@ class LoginViewModel(
             url = tokenEndpoint,
             basicHeader = basic,
             grantType = Consts.CLIENT_CREDENTIALS
-        )
+        ).map { it.getOrThrow() }
     }
 
     fun saveSignaturePublicKey(
@@ -55,6 +50,6 @@ class LoginViewModel(
             environmentId = environmentId,
             userId = userId,
             publicKey = publicKey
-        )
+        ).map { it.getOrThrow().nickname }
     }
 }

@@ -1,20 +1,15 @@
 package com.keyri.examplepingidentity.ui.register
 
-import android.content.SharedPreferences
 import android.util.Base64
-import androidx.core.content.edit
 import androidx.lifecycle.ViewModel
 import com.keyri.examplepingidentity.data.AccessToken
 import com.keyri.examplepingidentity.data.Consts
 import com.keyri.examplepingidentity.data.create_user.response.UserResponse
 import com.keyri.examplepingidentity.repository.auth.AuthRepository
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.map
 
-class RegisterViewModel(
-    private val authRepository: AuthRepository,
-    private val preferences: SharedPreferences
-) : ViewModel() {
+class RegisterViewModel(private val authRepository: AuthRepository) : ViewModel() {
 
     fun register(
         givenName: String,
@@ -35,11 +30,7 @@ class RegisterViewModel(
             populationID,
             environmentId,
             accessToken
-        ).onEach {
-            preferences.edit(commit = true) {
-                putString(email, it.id)
-            }
-        }
+        ).map { it.getOrThrow() }
     }
 
     fun getAccessTokenWithBasic(
@@ -54,7 +45,7 @@ class RegisterViewModel(
             url = tokenEndpoint,
             basicHeader = basic,
             grantType = Consts.CLIENT_CREDENTIALS
-        )
+        ).map { it.getOrThrow() }
     }
 
     fun saveSignaturePublicKey(
@@ -70,6 +61,6 @@ class RegisterViewModel(
             environmentId = environmentId,
             userId = userId,
             publicKey = publicKey
-        )
+        ).map { it.getOrThrow().nickname }
     }
 }
