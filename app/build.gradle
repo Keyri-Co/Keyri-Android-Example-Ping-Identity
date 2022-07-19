@@ -48,7 +48,7 @@ dependencies {
     implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.5.0'
     implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.5.0'
 
-    implementation "androidx.activity:activity-ktx:1.4.0"
+    implementation "androidx.activity:activity-ktx:1.5.0"
 
     // Okhttp
     implementation 'com.squareup.okhttp3:okhttp:4.9.3'
@@ -60,7 +60,7 @@ dependencies {
     implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
 
     // Keyri
-    implementation 'com.github.Keyri-Co:keyri-android-whitelabel-sdk:0.9.61'
+    implementation 'com.github.Keyri-Co:keyri-android-whitelabel-sdk:1.0.13'
 
     // Koin
     implementation "io.insert-koin:koin-android:3.2.0"
