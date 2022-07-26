@@ -10,7 +10,7 @@ import com.keyri.examplepingidentity.R
 import com.keyri.examplepingidentity.databinding.ActivityMainBinding
 import com.keyri.examplepingidentity.ui.login.LoginActivity
 import com.keyri.examplepingidentity.ui.register.RegisterActivity
-import com.keyrico.keyrisdk.ui.auth.AuthWithScannerActivity
+import com.keyrico.scanner.AuthWithScannerActivity
 
 class MainActivity : AppCompatActivity() {
 

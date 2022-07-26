@@ -59,8 +59,9 @@ dependencies {
     implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
     implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
 
-    // Keyri
-    implementation 'com.github.Keyri-Co:keyri-android-whitelabel-sdk:1.0.13'
+// Keyri
+    implementation 'com.github.Keyri-Co.keyri-android-whitelabel-sdk:keyrisdk:1.0.14'
+    implementation 'com.github.Keyri-Co.keyri-android-whitelabel-sdk:scanner:1.0.14'
 
     // Koin
     implementation "io.insert-koin:koin-android:3.2.0"
