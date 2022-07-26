@@ -14,7 +14,7 @@ import com.keyri.examplepingidentity.data.Consts
 import com.keyri.examplepingidentity.data.create_user.response.UserResponse
 import com.keyri.examplepingidentity.databinding.ActivityMainBinding
 import com.keyrico.keyrisdk.Keyri
-import com.keyrico.keyrisdk.ui.auth.AuthWithScannerActivity
+import com.keyrico.scanner.AuthWithScannerActivity
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.collectLatest
