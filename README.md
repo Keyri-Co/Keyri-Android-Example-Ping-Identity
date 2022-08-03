@@ -30,24 +30,13 @@ Open your app's `AndroidManifest.xml` file and add the following permission:
 
 ## Keyri Integration
 
-* Add the JitPack repository to your root build.gradle file:
-
-```groovy
-allprojects {
-    repositories {
-        // ...
-        maven { url "https://jitpack.io" }
-    }
-}
-```
-
-* Add SDK dependency to your build.gradle file and sync project:
+Add SDK dependency to your build.gradle file and sync project:
 
 ```kotlin
 dependencies {
     // ...
-    implementation ("com.github.Keyri-Co.keyri-android-whitelabel-sdk:keyrisdk:$latestKeyriVersion")
-    implementation ("com.github.Keyri-Co.keyri-android-whitelabel-sdk:scanner:$latestKeyriVersion")
+    implementation ("com.keyri:keyrisdk:$latestKeyriVersion")
+    implementation ("com.keyri:scanner:$latestKeyriVersion")
 }
 ```
 
@@ -113,10 +102,6 @@ Get access token and after use this
 endpoint `https://api.pingone.com/v1/environments/{environmentId}/users` to create new user.
 Pass [CreateUserBody](app/src/main/java/com/keyri/examplepingidentity/data/create_user/request/CreateUserBody.kt)
 , `bearerToken` and `environmentId`.
-
-After receiving user data, create payload as showed
-in [RegisterActivity](app/src/main/java/com/keyri/examplepingidentity/ui/register/RegisterActivity.kt)
-and pass it to the Keyri.
 
 Authenticate with Keyri. In the next showing `AuthWithScannerActivity` with providing
 `publicUserId` and `payload`.
