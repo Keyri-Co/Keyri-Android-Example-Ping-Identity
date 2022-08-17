@@ -14,7 +14,7 @@ import com.keyri.examplepingidentity.data.Consts
 import com.keyri.examplepingidentity.data.create_user.response.UserResponse
 import com.keyri.examplepingidentity.databinding.ActivityMainBinding
 import com.keyrico.keyrisdk.Keyri
-import com.keyrico.scanner.AuthWithScannerActivity
+import com.keyrico.scanner.easyKeyriAuth
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.collectLatest
@@ -100,7 +100,7 @@ class MainActivity : AppCompatActivity() {
                 associationKey
             ).collectLatest {
                 val timestampNonce = "${System.currentTimeMillis()}_${Random.nextInt()}"
-                val signature = keyri.getUserSignature(email, timestampNonce)
+                val signature = keyri.generateUserSignature(email, timestampNonce)
 
                 val payload = JSONObject().apply {
                     put("username", user.username)
@@ -116,13 +116,13 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun keyriAuth(publicUserId: String?, payload: String) {
-        val intent = Intent(this, AuthWithScannerActivity::class.java).apply {
-            putExtra(AuthWithScannerActivity.APP_KEY, "NJOFSuP652zthaoHaeDmImZ2CTh4NGqX")
-            putExtra(AuthWithScannerActivity.PUBLIC_USER_ID, publicUserId)
-            putExtra(AuthWithScannerActivity.PAYLOAD, payload)
-        }
-
-        easyKeyriAuthLauncher.launch(intent)
+        easyKeyriAuth(
+            this,
+            easyKeyriAuthLauncher,
+            "NJOFSuP652zthaoHaeDmImZ2CTh4NGqX",
+            payload,
+            publicUserId
+        )
     }
 
     private fun showMessage(view: View, msg: String) {
