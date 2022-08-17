@@ -67,7 +67,7 @@ class LoginActivity : AppCompatActivity() {
 
                                 val timestampNonce =
                                     "${System.currentTimeMillis()}_${Random.nextInt()}"
-                                val signature = keyri.getUserSignature(email, timestampNonce)
+                                val signature = keyri.generateUserSignature(email, timestampNonce)
 
                                 val payload = JSONObject().apply {
                                     put("username", user.username)
