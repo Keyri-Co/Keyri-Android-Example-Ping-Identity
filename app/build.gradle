@@ -4,12 +4,13 @@ plugins {
 }
 
 android {
-    compileSdk 32
-
     defaultConfig {
         applicationId "com.keyri.examplepingidentity"
+        namespace 'com.keyri.examplepingidentity'
+
         minSdk 23
         targetSdk 32
+        compileSdk 32
         versionCode 1
         versionName "1.0"
 
@@ -42,7 +43,7 @@ dependencies {
     implementation "androidx.appcompat:appcompat:1.5.0"
     implementation "com.google.android.material:material:1.6.1"
     implementation "androidx.constraintlayout:constraintlayout:2.1.4"
-    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.2"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4"
     implementation "androidx.lifecycle:lifecycle-runtime-ktx:2.5.1"
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.5.1"
     implementation "androidx.activity:activity-ktx:1.5.1"
@@ -57,7 +58,7 @@ dependencies {
     implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
 
     // Keyri
-    implementation 'com.keyri:keyri-bom:1.2.0'
+    implementation 'com.keyri:keyri-bom:2.1.0'
     implementation 'com.keyri:keyrisdk'
     implementation 'com.keyri:scanner'
 
