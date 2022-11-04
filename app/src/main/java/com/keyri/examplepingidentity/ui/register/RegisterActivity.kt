@@ -67,7 +67,7 @@ class RegisterActivity : AppCompatActivity() {
                                     accessToken
                                 ).first()
 
-                                val keyri = Keyri()
+                                val keyri = Keyri(this@RegisterActivity)
 
                                 val associationKey = keyri.getAssociationKey(user.email)
 

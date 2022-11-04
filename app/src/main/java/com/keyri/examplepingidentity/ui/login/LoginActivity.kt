@@ -52,7 +52,7 @@ class LoginActivity : AppCompatActivity() {
                                 val user =
                                     viewModel.getUser(email, environmentID, accessToken).first()
 
-                                val keyri = Keyri()
+                                val keyri = Keyri(this@LoginActivity)
 
                                 val associationKey  = keyri.getAssociationKey(email)
 
