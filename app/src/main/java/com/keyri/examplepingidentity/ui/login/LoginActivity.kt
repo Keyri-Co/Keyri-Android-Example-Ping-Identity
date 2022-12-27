@@ -11,6 +11,7 @@ import androidx.lifecycle.lifecycleScope
 import com.keyri.examplepingidentity.R
 import com.keyri.examplepingidentity.databinding.ActivityLoginBinding
 import com.keyri.examplepingidentity.ui.main.MainActivity
+import com.keyri.examplepingidentity.ui.main.MainActivity.Companion.APP_KEY
 import com.keyrico.keyrisdk.Keyri
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
@@ -52,9 +53,9 @@ class LoginActivity : AppCompatActivity() {
                                 val user =
                                     viewModel.getUser(email, environmentID, accessToken).first()
 
-                                val keyri = Keyri(this@LoginActivity)
+                                val keyri = Keyri(this@LoginActivity, APP_KEY)
 
-                                val associationKey  = keyri.getAssociationKey(email)
+                                val associationKey = keyri.getAssociationKey(email)
 
                                 viewModel.saveSignaturePublicKey(
                                     user.id,

@@ -10,6 +10,7 @@ import androidx.core.view.isVisible
 import androidx.lifecycle.lifecycleScope
 import com.keyri.examplepingidentity.R
 import com.keyri.examplepingidentity.databinding.ActivityRegisterBinding
+import com.keyri.examplepingidentity.ui.main.MainActivity.Companion.APP_KEY
 import com.keyri.examplepingidentity.ui.main.MainActivity.Companion.KEY_EMAIL
 import com.keyri.examplepingidentity.ui.main.MainActivity.Companion.KEY_PAYLOAD
 import com.keyrico.keyrisdk.Keyri
@@ -67,7 +68,7 @@ class RegisterActivity : AppCompatActivity() {
                                     accessToken
                                 ).first()
 
-                                val keyri = Keyri(this@RegisterActivity)
+                                val keyri = Keyri(this@RegisterActivity, APP_KEY)
 
                                 val associationKey = keyri.getAssociationKey(user.email)
 

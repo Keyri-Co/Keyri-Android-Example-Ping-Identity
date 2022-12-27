@@ -48,13 +48,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun keyriAuth(publicUserId: String, payload: String) {
-        easyKeyriAuth(
-            this,
-            easyKeyriAuthLauncher,
-            "NJOFSuP652zthaoHaeDmImZ2CTh4NGqX",
-            payload,
-            publicUserId
-        )
+        easyKeyriAuth(this, easyKeyriAuthLauncher, APP_KEY, payload, publicUserId)
     }
 
     private fun showMessage(view: View, msg: String) {
@@ -66,6 +60,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     companion object {
+        const val APP_KEY = "NJOFSuP652zthaoHaeDmImZ2CTh4NGqX"
         const val KEY_EMAIL = "EMAIL"
         const val KEY_PAYLOAD = "PAYLOAD"
     }
